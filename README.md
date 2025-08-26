@@ -1,13 +1,13 @@
 # Splat Forge Documentation
 Splat Forge is an addon for using Gaussian Splats (3DGS) natively in Blender. It directly implements these in GLSL, giving native performance. This way your scene can easily handle millions of splats in realtime! It is compatible with both EEVEE and Cycles.
 
-Watch the demo video here: [Youtube Splat Forge Demo](https://youtu.be/ntQnDWQcLt8)
-[![Youtube Splat Forge Demo](http://img.youtube.com/vi/ntQnDWQcLt8/0.jpg)](https://youtu.be/ntQnDWQcLt8)
+Watch the demo video here: [YouTube Splat Forge Demo](https://youtu.be/ntQnDWQcLt8)
+[![YouTube Splat Forge Demo](http://img.youtube.com/vi/ntQnDWQcLt8/0.jpg)](https://youtu.be/ntQnDWQcLt8)
 
 ## Install Splat Forge:
 - After downloading the zip you can directly go into Blender -> Edit (Top Left) -> Preferences -> Addons -> Arrow in the top right that points down -> Install from disk -> Select the downloaded .zip file
 
-Blender should automatically activate it and you will see a new tab in side panel (N).
+Blender should automatically activate it and you will see a new tab in side panel (press N).
 
 ![SplatForge GUI Panel](assets/sf_gui.png)
 
@@ -20,7 +20,7 @@ Blender should automatically activate it and you will see a new tab in side pane
 ## Working with a Splat
 - You can transform the splat like any regular object (translate, rotate, scale) or duplicate with `Shift + D`
 - Hiding it in the viewport will only work on the object directly. Disabling the collection the gaussian splat is in, won't work.
-- Same goes for `Disable in Viewports` and `Disable in Renders`
+- `Disable in Viewports` and `Disable in Renders` will also only work on the object directly
 
 ### Changing the visualization mode
 SplatForge supports 3 different visualization modes. These can also be rendered out.
@@ -31,7 +31,7 @@ Gaussian Viz: Proper visualization of the gaussian splats
 Depth Viz:
 ![Depth Visualization Mode](assets/sf_mode_depth_viz.png)
 
-Surfel Viz: Shows all Gaussian splats as ellipse surfels with their original orientation. 
+Surfel Viz: Shows all Gaussian splats as elliptical surfels with their original orientation. 
 ![Surfel Visualization Mode](assets/sf_mode_surfel_viz.png)
 
 ### Spherical Harmonics Degree
@@ -39,7 +39,7 @@ SplatForge supports spherical harmonics up to degree 3. You can change the rende
 
 ### Update Sensitivity
 Due to how Gaussian splats are rendered, they need to be sorted or they will look "wrong". This sorting/updating is expensive but required for accurate visualization.
-You can adjust the sensitivity of how many times this happens.
+You can adjust the sensitivity of how often this happens.
 - Smaller numbers → fewer updates → scene less accurate
 - Larger number → more updates → scene is more accurate
 - 0 is the extreme case, you will start seeing artifacts as if you can see through objects but the performance will be better for scenes with several million gaussians
@@ -64,44 +64,51 @@ To do this, go in the `Properties` Panel to `View Layer` ![Blender View Layer Pr
 Then go to the `Compositing Workspace`, `Use Nodes` and add a `File Output` node to the `Depth` of the `Render Layers` Node. Select the `File Output` Node and go into the node's settings. There, change the base path to your desired location and the file format to `OpenEXR` (other file formats will corrupt the depth).
 ![Compositing Depth Setup](assets/sf_compositing_depth.png)
 
-Now you can render your Blender scene as you are used to (e.g., with F12/Ctrl+F12) and Blender will output the Color/Combined Frames aswell as the depth. 
+Now you can render your Blender scene as you are used to (e.g., with F12/Ctrl+F12) and Blender will output the Color/Combined Frames as well as the depth. 
 
-After the render is finished, go into Blender again and this time, in the SplatForge render settings, turn on `Use External Depth` and `Use External Color Composite`. If you rendered an animation, also tick the `Is Image Sequence` checkbox and select the folder.
+After the render is finished, go into Blender again and this time, in the SplatForge render settings, turn on `Use External Depth` and `Use External Color Composite`. If you rendered an animation, also tick the `Is Image Sequence` checkbox.
 
 ![Render Settings with External Depth and Color](assets/sf_render_all.png)
 
-Now you can hit the `Render Frame` or `Animation` button. SplatForge will again render to the location set in `Output` ![Blender Output Properties Icon](assets/blender_output_icon.png). This time there will also be a folder called `sf_composite`, which contains your rendered out Blender scene combined with Gaussian splats.
-**Note:** In the case of a animation, SpatForge will search for frame x the image_x.png (other image file types possible) file. If you want to offset this, use `Frame Offset`.
+Set the two paths to where you rendered your Blender scene depth (path you set in the `File Output`) and Blender scene color (path you previously set in `Output` ![Blender Output Properties Icon](assets/blender_output_icon.png)). You can now hit the `Render Frame` or `Animation` button. SplatForge will render to the location set in `Output` ![Blender Output Properties Icon](assets/blender_output_icon.png), so you may want to change it before rendering the Gaussian splats. 
+
+**Note:** Open the console before rendering to see an estimate of how long rendering the Gaussians will take and the current progress.
+
+SplatForge will create a folder called `sf_composite`, which contains your rendered out Blender scene combined with Gaussian splats.
+
+**Note:** Use `Frame Offset` to use a different numbered image than the current frame number.
 
 ### Rendering with Blender objects and custom compositing
 In the above scenario, we let SplatForge do the compositing for us while it was rendering the scene. There are use cases (e.g., color correction, adding camera effects like haze or similar) where you want to do the compositing yourself, either in external programs or Blender.
 
-In this case, we still need to give SplatForge the depth (`Use External Depth`) but not the color. To get the depth, follow the instructions from [Rendering with Blender object](#rendering-with-blender-objects)
-- Render animation and depth first to file (Use OpenEXR or depth will be corrupt), then render Gaussian with external depth, then composite together.
+In this case, we still need to give SplatForge the depth (`Use External Depth`) but not the color. To get the depth, follow the instructions from [Rendering with Blender objects](#rendering-with-blender-objects)
 
 ![Depth Only Rendering Setup](assets/sf_render_depth_only.png)
 
-If you want, to composite in Blender, a typical set up looks like this
+If you want to composite in Blender, a typical setup looks like this
+![Compositing Yourself](assets/sf_compositing_outside.png)
+Here we don't actually need to be in the blend file of the original scene since we are using Blender just for compositing images.
+If you want to work with an animation you can also use `Movie Clip` Nodes as input. The depth images from the Blender render and the Gaussian Splat rasterization are only needed in advanced compositing cases.
 
 
 ## Other Infos
-- Pack into file won't work, but SplatForge will auto-load any SplatForge objects that have been saved (it will remember the file path from where it was initially loaded)
+- Pack into file won't work, but SplatForge will auto-load any SplatForge objects that have been saved (it will remember the file path from where it was initially loaded). This also means that scenes with many Gaussian Splat objects will take Blender longer to load (appear to freeze).
 - Because the Gaussian splats are not part of Blender's rendering system but live in OpenGL/Vulkan/GLSL, the objects cannot interact with scene lighting 
   - A solution to this is in the works
+- SplatForge does not support motion blur or depth of field blur yet
 
 ## Known Issues
 Fixes are on their way!
 ### Known quirks
 #### Reloading
-  As the Gaussian objects "live" in the GPU VRAM, certain modifications will require reloading.
+  As the Gaussian objects "live" in the GPU VRAM, certain modifications will trigger auto-reloading.
   - Duplicating/renaming a Gaussian splat will cause it to be reloaded
-  - Deleting a Gaussian splat will cause all remaining Gaussian splats to be reloaded
-- Too many Gaussians in the scene will cause stuttering. Try reducing the update rate in the GUI to improve performance. → Will further improve this soon!
+- Too many Gaussians in the scene, will cause stuttering. Try reducing the update rate in the GUI to improve performance. → Will further improve general performance soon!
 
 ### Known Bugs
 - There is currently a limit of about 4.5 million Gaussians per scene
 
 
-The shown Gaussian Splat Model in some of the screenshot is licensed under CC-BY-4.0
+The shown Gaussian splat model in some of the screenshots is licensed under CC-BY-4.0
 https://creativecommons.org/licenses/by/4.0
 https://poly.cam/capture/0151341b-647f-4d29-884c-a21566bd4312
