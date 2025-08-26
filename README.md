@@ -2,6 +2,7 @@
 Splat Forge is an addon for using Gaussian Splats (3DGS) natively in Blender. It directly implements these in GLSL, giving native performance. This way your scene can easily handle millions of splats in realtime! It is compatible with both EEVEE and Cycles.
 
 Watch the demo video here: [YouTube Splat Forge Demo](https://youtu.be/ntQnDWQcLt8)
+
 [![YouTube Splat Forge Demo](http://img.youtube.com/vi/ntQnDWQcLt8/0.jpg)](https://youtu.be/ntQnDWQcLt8)
 
 ## Install Splat Forge:
