@@ -42,7 +42,7 @@ SplatForge supports spherical harmonics up to degree 3. You can change the rende
 Due to how Gaussian splats are rendered, they need to be sorted or they will look "wrong". This sorting/updating is expensive but required for accurate visualization.
 You can adjust the sensitivity of how often this happens.
 - Smaller numbers → fewer updates → scene less accurate
-- Larger number → more updates → scene is more accurate
+- Larger numbers → more updates → scene is more accurate
 - 0 is the extreme case, you will start seeing artifacts as if you can see through objects but the performance will be better for scenes with several million gaussians
 - **Note:** When rendering your scene, SplatForge will always use the most accurate setting.
 
@@ -104,10 +104,16 @@ Fixes are on their way!
 #### Reloading
   As the Gaussian objects "live" in the GPU VRAM, certain modifications will trigger auto-reloading.
   - Duplicating/renaming a Gaussian splat will cause it to be reloaded
-- Too many Gaussians in the scene, will cause stuttering. Try reducing the update rate in the GUI to improve performance. → Will further improve general performance soon!
+### Viewport Artifacts
+  - When moving the camera very fast, artifacts may appear. To reduce the amount of visible artifacts, increase the update rate. When rendering, no artifacts will appear because SplatForge updates before every frame automatically.
+### Large Models
+  - Too many Gaussians in the scene, will cause stuttering. Try reducing the update rate in the GUI to improve performance. 
+  - Loading will take longer and longer the more Gaussian Splat Objects are in the scene. At about 8 millions Gaussian Splats in the scene, adding a new Gaussian Splat objects takes about one minute or longer. Blender will appear to be frozen during loading. Deleting Gaussian Splat objects will also cause Blender to freeze or a short time.
+
 
 ### Known Bugs
-- There is currently a limit of about 4.5 million Gaussians per scene
+- There is currently a limit of about 16 million Gaussians per scene. Adding more will cause a crash.
+- Sometimes when duplicating/loading a Gaussian Splat Objects it won't appear. This is a quirk from Blender's API. Workaround: save the scene and reload it.
 
 
 The shown Gaussian splat model in some of the screenshots is licensed under CC-BY-4.0
