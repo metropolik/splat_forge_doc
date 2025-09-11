@@ -5,6 +5,8 @@ Watch the demo video here: [YouTube Splat Forge Demo](https://youtu.be/ntQnDWQcL
 
 [![YouTube Splat Forge Demo](http://img.youtube.com/vi/ntQnDWQcLt8/0.jpg)](https://youtu.be/ntQnDWQcLt8)
 
+Video Tutorial: [https://youtu.be/h0C-8AtYZuM](https://youtu.be/h0C-8AtYZuM)
+
 [![Youtube Splat Forge Video Tutorial](https://img.youtube.com/vi/h0C-8AtYZuM/0.jpg)](https://youtu.be/h0C-8AtYZuM)
 
 ## Install Splat Forge:
